@@ -1,0 +1,76 @@
+@model CalculatorModel
+@{
+    ViewData["Title"] = "Калькулятор";
+}
+
+<main class="page">
+    <section class="calculator-card">
+        <div class="top-mark"></div>
+
+        <div class="heading">
+            <div class="heading-icon">±</div>
+            <p class="eyebrow">ПРОСТО И УДОБНО</p>
+            <h1>Калькулятор</h1>
+            <p class="subtitle">Введите два числа и выберите действие</p>
+        </div>
+
+        <form asp-action="Index" method="post">
+            @Html.AntiForgeryToken()
+
+            <div class="field">
+                <label asp-for="FirstNumber">Первое число</label>
+                <input asp-for="FirstNumber" type="number" step="any" placeholder="Например, 12" />
+            </div>
+
+            <div class="field">
+                <label asp-for="SecondNumber">Второе число</label>
+                <input asp-for="SecondNumber" type="number" step="any" placeholder="Например, 5" />
+            </div>
+
+            <div class="field">
+                <span class="field-label">Действие</span>
+                <div class="operations">
+                    <label class="operation-option">
+                        <input asp-for="Operation" type="radio" value="+" />
+                        <span>+</span>
+                    </label>
+                    <label class="operation-option">
+                        <input asp-for="Operation" type="radio" value="-" />
+                        <span>−</span>
+                    </label>
+                    <label class="operation-option">
+                        <input asp-for="Operation" type="radio" value="*" />
+                        <span>×</span>
+                    </label>
+                    <label class="operation-option">
+                        <input asp-for="Operation" type="radio" value="/" />
+                        <span>÷</span>
+                    </label>
+                </div>
+            </div>
+
+            <button class="calculate-button" type="submit">
+                Вычислить
+                <span aria-hidden="true">→</span>
+            </button>
+        </form>
+
+        @if (!string.IsNullOrEmpty(Model.Error))
+        {
+            <div class="message error" role="alert">
+                <span class="message-symbol">!</span>
+                <span>@Model.Error</span>
+            </div>
+        }
+
+        @if (!string.IsNullOrEmpty(Model.Result))
+        {
+            <div class="message result" role="status">
+                <span class="result-caption">Результат</span>
+                <strong>@Model.Result</strong>
+            </div>
+        }
+
+        <p class="footer-note">Calculator_17 · ASP.NET Core MVC</p>
+    </section>
+</main>
