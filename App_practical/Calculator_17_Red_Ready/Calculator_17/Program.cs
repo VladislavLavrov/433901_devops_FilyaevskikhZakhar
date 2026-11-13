@@ -6,7 +6,10 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
     ?? throw new InvalidOperationException("Не задана строка подключения DefaultConnection.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(
+    connectionString,
+    new MariaDbServerVersion(new Version(11, 4, 0))
+));
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
