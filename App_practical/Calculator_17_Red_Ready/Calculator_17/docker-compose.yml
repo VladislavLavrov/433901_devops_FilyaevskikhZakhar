@@ -1,5 +1,5 @@
+
 services:
-  
   mariadb:
     image: mariadb:11.4
     container_name: calculator_17_db
@@ -12,14 +12,13 @@ services:
     volumes:
       - calculator17_db_data:/var/lib/mysql
     ports:
-      - "3306:3306"
+      - "13306:3306"
     healthcheck:
       test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 5s
       timeout: 5s
       retries: 20
       start_period: 20s
-
 
   web:
     build: .
@@ -30,7 +29,12 @@ services:
         condition: service_healthy
     environment:
       ASPNETCORE_URLS: http://0.0.0.0:5518
-      ConnectionStrings__DefaultConnection: Server=mariadb;Port=3306;Database=calculator17;User=calculator_user;Password=${MARIADB_PASSWORD:-ChangeAppPassword_123!};
+
+      ConnectionStrings__DefaultConnection: "Server=mariadb;Port=3306;Database=calculator17;User=calculator_user;Password=${MARIADB_PASSWORD:-ChangeAppPassword_123!};"
+
+      Kafka__BootstrapServers: "93.88.178.186:9094"
+      Kafka__Topic: "filiaevskin"
+      Kafka__CallbackUrl: "http://127.0.0.1:5518/Calculator/Callback"
     ports:
       - "5518:5518"
 

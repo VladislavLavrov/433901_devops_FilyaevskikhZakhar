@@ -1,5 +1,6 @@
 using Calculator_17.Data;
 using Microsoft.EntityFrameworkCore;
+using Calculator_17.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
@@ -11,6 +12,14 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     new MariaDbServerVersion(new Version(11, 4, 0))
 ));
 builder.Services.AddControllersWithViews();
+
+// Регистрация Kafka-сервисов
+builder.Services.AddSingleton<CalculationResultStore>();
+builder.Services.AddSingleton<KafkaProducerService>();
+
+builder.Services.AddHttpClient();
+
+builder.Services.AddHostedService<KafkaConsumerService>();
 
 var app = builder.Build();
 
