@@ -11,8 +11,7 @@ public class CalculatorModel
     public double SecondNumber { get; set; }
 
     public string Operation { get; set; } = "+";
-
     public string? Result { get; set; }
-
     public string? Error { get; set; }
+    public List<CalculationHistory> History { get; set; } = new();
 }

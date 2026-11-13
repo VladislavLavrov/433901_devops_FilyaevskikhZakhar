@@ -1,0 +1,34 @@
+services:
+  mariadb:
+    image: mariadb:11.4
+    container_name: calculator_17_db
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-ChangeRootPassword_123!}
+      MARIADB_DATABASE: calculator17
+      MARIADB_USER: calculator_user
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-ChangeAppPassword_123!}
+    volumes:
+      - calculator17_db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+
+  web:
+    build: .
+    container_name: calculator_17_5518
+    restart: unless-stopped
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      ASPNETCORE_URLS: http://0.0.0.0:5518
+      ConnectionStrings__DefaultConnection: Server=mariadb;Port=3306;Database=calculator17;User=calculator_user;Password=${MARIADB_PASSWORD:-ChangeAppPassword_123!};
+    ports:
+      - "5518:5518"
+
+volumes:
+  calculator17_db_data:

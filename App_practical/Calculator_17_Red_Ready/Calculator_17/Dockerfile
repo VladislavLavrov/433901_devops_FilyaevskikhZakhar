@@ -1,12 +1,14 @@
-FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
-EXPOSE 5017
+ENV ASPNETCORE_URLS=http://0.0.0.0:5518
+EXPOSE 5518
 
-FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+COPY ["Calculator_17.csproj", "./"]
+RUN dotnet restore "Calculator_17.csproj"
 COPY . .
-RUN dotnet restore "./Calculator_17.csproj"
-RUN dotnet publish "./Calculator_17.csproj" -c Release -o /app/publish --no-restore
+RUN dotnet publish "Calculator_17.csproj" -c Release -o /app/publish /p:UseAppHost=false --no-restore
 
 FROM base AS final
 WORKDIR /app
